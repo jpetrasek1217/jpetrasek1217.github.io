@@ -49,8 +49,8 @@ export class TrackTableComponent implements OnInit {
   ngOnInit() {
     const initialTracks: Track[] = [
       { type: 'Video', component: 'Main Video', filePosition: 0, channels: 1 },
-      { type: 'Audio', component: 'Mono_1', filePosition: 1, channels: 1 },
-      { type: 'Audio', component: 'Mono_2', filePosition: 2, channels: 1 },
+      { type: 'Audio', component: 'Mono1', filePosition: 1, channels: 1 },
+      { type: 'Audio', component: 'Mono2', filePosition: 2, channels: 1 },
       { type: 'Audio', component: 'English Stereo', filePosition: 3, channels: 2 },
       { type: 'Audio', component: 'English Surround', filePosition: 5, channels: 6 }
     ];
