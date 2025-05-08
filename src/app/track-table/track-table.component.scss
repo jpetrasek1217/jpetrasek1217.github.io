@@ -1,0 +1,124 @@
+.mat-mdc-table {
+  width: 100%;
+  margin: 16px 0;
+}
+
+.greyed-out {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.left-greyed-out {
+  color: rgba(0, 0, 0, 0.38);
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.right-greyed-out {
+  color: rgba(0, 0, 0, 0.38);
+  background-color: rgba(0, 0, 0, 0.04);
+  
+  .mat-mdc-form-field {
+    ::ng-deep .mat-mdc-input-element:disabled {
+      color: rgba(0, 0, 0, 0.38);
+    }
+  }
+}
+
+td.mat-mdc-cell {
+  padding: 8px;
+}
+
+// Add a subtle divider between left and right sides of the table
+td.mat-mdc-cell:nth-child(5) {
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+th.mat-mdc-header-cell:nth-child(5) {
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.table-container {
+  margin: 1rem 0;
+  overflow: auto;
+  border-radius: 4px;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-mdc-header-cell {
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.mat-mdc-cell {
+  padding: 8px;
+}
+
+// Add visual separation between left and right sides
+td:nth-child(5), th:nth-child(5) {
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+// Make form fields more compact in table cells
+.compact-form-field {
+  width: 100%;
+  max-width: 120px;
+  
+  ::ng-deep .mat-mdc-form-field-wrapper {
+    padding-bottom: 0;
+    
+    .mat-mdc-form-field-flex {
+      padding-top: 0;
+    }
+  }
+}
+
+// Style number inputs
+input[type="number"] {
+  text-align: right;
+}
+
+// Add hover effect to rows
+.mat-mdc-row:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+// Video track row styling
+.mat-mdc-row:first-child {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+// Channel indicator styling
+.channel-indicator {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  text-align: center;
+}
+
+// Merged row styling
+.merged-row {
+  background-color: rgba(0, 0, 0, 0.02);
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+}
+
+// Actions container styling
+.actions-container {
+  margin: 1rem 0;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.button-cell {
+  width: 40px;
+  min-width: 40px;
+  padding: 0 4px !important;
+  text-align: center;
+  vertical-align: middle;
+}

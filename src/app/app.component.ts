@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import { TrackTableComponent } from './track-table/track-table.component';
 
 @Component({
   selector: 'app-root',
-  imports: [],
+  standalone: true,
+  imports: [TrackTableComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
