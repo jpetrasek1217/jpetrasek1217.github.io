@@ -9,7 +9,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Track, TrackRow, ExtendedTrackRow } from './track.types';
-import _ from 'lodash';
 
 @Component({
   selector: 'app-track-table',
