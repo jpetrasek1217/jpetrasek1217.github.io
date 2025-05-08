@@ -38,7 +38,6 @@
           },
           "configurations": {
             "production": {
-              "baseHref": "/TrackTypeChangeMockup/",
               "budgets": [
                 {
                   "type": "initial",
