@@ -122,3 +122,9 @@ input[type="number"] {
   text-align: center;
   vertical-align: middle;
 }
+
+// Ensure mat-select dropdown is not transparent
+::ng-deep .mat-mdc-select-panel {
+  background: #fff !important;
+  opacity: 1 !important;
+}
