@@ -90,13 +90,6 @@ export class TrackTableComponent implements OnInit {
            (row.isParentRow ?? true); // Only allow split if channels > 1
   }
 
-  canShowRemoveButton(row: ExtendedTrackRow): boolean {
-    return !this.isVideoTrack(row) && 
-           row.leftSideGreyedOut && 
-           !row.rightSideGreyedOut && 
-           !row.isParentRow;
-  }
-
   splitRow(index: number) {
     const sourceRow = this.trackRows[index];
     if (!this.canShowSplitButton(sourceRow)) return;
@@ -170,26 +163,16 @@ export class TrackTableComponent implements OnInit {
 
     this.trackRows.splice(index + 1, 0, newRow);
     this.trackRows = [...this.trackRows];
-    this.recalculateFilePositions();
+    // this.recalculateFilePositions();
     this.cdr.detectChanges();
   }
 
   removeRow(index: number) {
     const rowToRemove = this.trackRows[index];
-    if (!this.canShowRemoveButton(rowToRemove)) return;
-
-    if (rowToRemove.parentRowIndex !== undefined) {
-      const parentRow = this.trackRows[rowToRemove.parentRowIndex];
-      if (parentRow) {
-        parentRow.splitCount = Math.max(0, parentRow.splitCount - 1);
-        parentRow.original.channels += 1;
-        parentRow.transformation.channels = parentRow.original.channels;
-      }
-    }
-
+    if (this.isVideoTrack(rowToRemove)) return;
     this.trackRows.splice(index, 1);
     this.trackRows = [...this.trackRows];
-    this.recalculateFilePositions();
+    // this.recalculateFilePositions(); // Commented out as requested
     this.cdr.detectChanges();
   }
 
@@ -449,26 +432,34 @@ export class TrackTableComponent implements OnInit {
   onAudioTypeChange(row: ExtendedTrackRow) {
     if (!row.transformation.audioType) return;
     let channels = 1;
-    if (row.transformation.audioType.includes('stereo')) channels = 2;
-    else if (row.transformation.audioType.includes('surround')) channels = 6;
-    const rowStart = this.trackRows.indexOf(row)
-    for (let i = rowStart + 1; i < rowStart + channels; i++) {
-      if (row.transformation.filePosition + channels > this.trackRows[i].transformation.filePosition) {
-        if (this.trackRows[i].transformation.channels > 1) {
-          this.splitRow(i);
-          this.trackRows = [...this.trackRows];
-          this.cdr.detectChanges();
-          this.trackRows.splice(i+1, 1);
-          i--;
-        } else {
-          this.trackRows.splice(i, 1);
-        }
-      }
+    let componentName = '';
+    if (row.transformation.audioType.includes('stereo')) {
+      channels = 2;
+      componentName = 'Stereo';
+    } else if (row.transformation.audioType.includes('surround')) {
+      channels = 6;
+      componentName = 'Surround';
+    } else if (row.transformation.audioType.includes('mono')) {
+      channels = 1;
+      componentName = 'Mono';
     }
-    this.trackRows = [...this.trackRows];
+    // Extract language code and convert to readable name
+    const langMap: { [key: string]: string } = {
+      eng: 'English',
+      fra: 'French',
+      ger: 'German',
+      spa: 'Spanish',
+      ita: 'Italian'
+    };
+    const parts = row.transformation.audioType.split('-');
+    if (parts.length === 2 && langMap[parts[1]]) {
+      componentName += ' ' + langMap[parts[1]];
+    }
     row.transformation.channels = channels;
-    row.original.channels = channels; // Ensure displayed value updates
-    this.updateFilePositions()
+    row.original.channels = channels;
+    row.transformation.component = componentName;
+    row.original.component = componentName;
+    this.updateFilePositions();
   }
 
   drop(event: CdkDragDrop<ExtendedTrackRow[]>) {
@@ -477,7 +468,7 @@ export class TrackTableComponent implements OnInit {
     if (this.isVideoTrack(prev) || this.isVideoTrack(curr)) return;
     moveItemInArray(this.trackRows, event.previousIndex, event.currentIndex);
     this.trackRows = [...this.trackRows];
-    this.recalculateFilePositions();
+    // this.recalculateFilePositions();
     this.cdr.detectChanges(); // Ensure view updates after drag-and-drop
   }
 
@@ -516,6 +507,40 @@ export class TrackTableComponent implements OnInit {
       this.trackRows[i].transformation.filePosition = currentPosition;
       currentPosition += this.trackRows[i].original.channels;
     }
+    this.cdr.detectChanges();
+  }
+
+  addTrack() {
+    // Find the next available file position after all tracks
+    let maxFilePos = 0;
+    this.trackRows.forEach(row => {
+      const end = row.original.filePosition + row.original.channels - 1;
+      if (end > maxFilePos) {
+        maxFilePos = end;
+      }
+    });
+    const newTrack: ExtendedTrackRow = {
+      original: {
+        type: 'Audio',
+        component: 'New Audio',
+        filePosition: maxFilePos + 1,
+        channels: 1,
+        audioType: 'mono-eng'
+      },
+      transformation: {
+        type: 'Audio',
+        component: 'New Audio',
+        filePosition: maxFilePos + 1,
+        channels: 1,
+        audioType: 'mono-eng'
+      },
+      leftSideGreyedOut: false,
+      rightSideGreyedOut: false,
+      splitCount: 0,
+      isParentRow: true
+    };
+    this.trackRows.push(newTrack);
+    this.trackRows = [...this.trackRows];
     this.cdr.detectChanges();
   }
 }
