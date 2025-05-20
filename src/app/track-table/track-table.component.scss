@@ -1,6 +1,6 @@
 .mat-mdc-table {
   width: 100%;
-  margin: 16px 0;
+  margin-top: 16px;
 }
 
 .greyed-out {
@@ -27,17 +27,12 @@ td.mat-mdc-cell {
   padding: 8px;
 }
 
-// Add a subtle divider between left and right sides of the table
-td.mat-mdc-cell:nth-child(5) {
-  border-right: 1px solid rgba(0, 0, 0, 0.12);
-}
-
 th.mat-mdc-header-cell:nth-child(5) {
   border-right: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .table-container {
-  margin: 1rem 0;
+  margin-top: 1rem;
   overflow: auto;
   border-radius: 4px;
 }
@@ -127,4 +122,16 @@ input[type="number"] {
 ::ng-deep .mat-mdc-select-panel {
   background: #fff !important;
   opacity: 1 !important;
+}
+
+.add-track-row {
+  display: flex;
+}
+
+.add-track-row-button {
+  padding: 30px 8px 30px 0px;
+}
+
+.add-track-row {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
 }
