@@ -34,18 +34,6 @@
       <td mat-cell *matCellDef="let row">{{row.original.channels}}</td>
     </ng-container>
 
-    <!-- Split Button Column -->
-    <ng-container matColumnDef="split">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let row; let i = index" class="button-cell">
-        <ng-container *ngIf="canShowSplitButton(row)">
-          <button mat-icon-button color="primary" (click)="splitRow(i)" matTooltip="Split track">
-            <mat-icon>+</mat-icon>
-          </button>
-        </ng-container>
-      </td>
-    </ng-container>
-
     <!-- AudioType Column as Dropdown -->
     <ng-container matColumnDef="audioType">
       <th mat-header-cell *matHeaderCellDef>AudioType</th>
