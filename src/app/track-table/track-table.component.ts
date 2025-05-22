@@ -33,7 +33,7 @@ import { Track, TrackRow, ExtendedTrackRow, AudioType } from './track.types';
 })
 export class TrackTableComponent implements OnInit {
   displayedColumns: string[] = [
-    'drag', 'type', 'component', 'filePosition', 'channels', 'split', 'audioType', 'remove'
+    'drag', 'type', 'component', 'filePosition', 'channels', 'audioType', 'remove'
   ];
   
   audioTypes: AudioType[] = ['mono-eng', 'stereo-eng', 'surround-eng', 'mono-fra', 'stereo-fra', 'surround-fra', 'mono-ger', 'stereo-ger', 'surround-ger', 'mono-spa', 'stereo-spa', 'surround-spa', 'mono-ita', 'stereo-ita', 'surround-ita'];
@@ -67,7 +67,6 @@ export class TrackTableComponent implements OnInit {
       transformation: { ...track },
       leftSideGreyedOut: false,
       rightSideGreyedOut: false,
-      splitCount: 0,
       isParentRow: true // All initial rows are parent rows
     }));
     this.originalTrackRows = this.trackRows;
@@ -81,91 +80,6 @@ export class TrackTableComponent implements OnInit {
 
     this.cdr.detectChanges();
  }
-
-  canShowSplitButton(row: ExtendedTrackRow): boolean {
-    return !this.isVideoTrack(row) &&
-           !row.leftSideGreyedOut &&
-           !row.rightSideGreyedOut &&
-           row.original.channels > 1 &&
-           (row.isParentRow ?? true); // Only allow split if channels > 1
-  }
-
-  splitRow(index: number) {
-    const sourceRow = this.trackRows[index];
-    if (!this.canShowSplitButton(sourceRow)) return;
-
-    // Only split if more than 1 channel
-    if (sourceRow.original.channels <= 1) return;
-
-    sourceRow.splitCount += 1;
-    sourceRow.isParentRow = true;
-
-    // Subtract 1 channel from source
-    sourceRow.original.channels -= 1;
-    sourceRow.transformation.channels = sourceRow.original.channels;
-
-    // Determine new audioType for the split row
-    let newAudioType: AudioType | undefined = undefined
-    if (sourceRow.original.channels === 1) {
-      // If source is mono after split, keep its audioType as mono
-      if (sourceRow.original.audioType && sourceRow.original.audioType.startsWith('mono')) {
-        newAudioType = sourceRow.original.audioType;
-      } else if (sourceRow.original.audioType && sourceRow.original.audioType.includes('-')) {
-        // If source was stereo/surround, use mono-<lang>
-        const lang = sourceRow.original.audioType.split('-')[1];
-        newAudioType = 'mono-' + lang as AudioType;
-      }
-    } else if (sourceRow.original.channels === 2) {
-      // If source is stereo after split, keep its audioType as stereo
-      if (sourceRow.original.audioType && sourceRow.original.audioType.startsWith('stereo')) {
-        newAudioType = sourceRow.original.audioType;
-      } else if (sourceRow.original.audioType && sourceRow.original.audioType.includes('-')) {
-        const lang = sourceRow.original.audioType.split('-')[1];
-        newAudioType = 'stereo-' + lang as AudioType;
-      }
-    } else if (sourceRow.original.channels === 6) {
-      if (sourceRow.original.audioType && sourceRow.original.audioType.startsWith('surround')) {
-        newAudioType = sourceRow.original.audioType;
-      } else if (sourceRow.original.audioType && sourceRow.original.audioType.includes('-')) {
-        const lang = sourceRow.original.audioType.split('-')[1];
-        newAudioType = 'surround-' + lang as AudioType;
-      }
-    } else {
-      // For 3, 4, 5 channels, set audioType to undefined
-      // sourceRow.original.audioType = undefined
-      sourceRow.transformation.audioType = undefined
-      newAudioType = undefined
-    }
-
-    const newRow: ExtendedTrackRow = {
-      original: {
-        ...sourceRow.original,
-        channels: 1,
-        audioType: newAudioType
-      },
-      transformation: {
-        ...sourceRow.original,
-        channels: 1,
-        audioType: newAudioType
-      },
-      leftSideGreyedOut: true,
-      rightSideGreyedOut: false,
-      splitCount: 0,
-      isParentRow: false,
-      parentRowIndex: index
-    };
-
-    // If the new row has 3, 4, or 5 channels (shouldn't happen, but for safety)
-    if ([3,4,5].includes(newRow.original.channels)) {
-      newRow.original.audioType = undefined;
-      newRow.transformation.audioType = undefined;
-    }
-
-    this.trackRows.splice(index + 1, 0, newRow);
-    this.trackRows = [...this.trackRows];
-    // this.recalculateFilePositions();
-    this.cdr.detectChanges();
-  }
 
   removeRow(index: number) {
     const rowToRemove = this.trackRows[index];
@@ -225,8 +139,8 @@ export class TrackTableComponent implements OnInit {
         }
 
         // If the next row has multiple channels and isn't fully split yet, split it first
-        if (nextRow.original.channels > 1 && !this.hasEnoughSplits(nextRow)) {
-          this.splitRow(nextRowIndex);
+        if (nextRow.original.channels > 1) {
+          // this.splitRow(nextRow);
           const newNextRow = this.findNextEditableRow(rowIndex);
           if (newNextRow) {
             newNextRow.transformation = { ...row.transformation };
@@ -250,8 +164,8 @@ export class TrackTableComponent implements OnInit {
             const targetRow = this.findNextEditableRow(nextRowIndex + i);
             if (targetRow) {
               const targetIndex = this.trackRows.indexOf(targetRow);
-              if (targetRow.original.channels > 1 && !this.hasEnoughSplits(targetRow)) {
-                this.splitRow(targetIndex);
+              if (targetRow.original.channels > 1) {
+                // this.splitRow(targetRow);
               }
               const newTargetRow = this.findNextEditableRow(rowIndex);
               if (newTargetRow) {
@@ -496,9 +410,9 @@ export class TrackTableComponent implements OnInit {
     return undefined;
   }
 
-  private hasEnoughSplits(row: ExtendedTrackRow): boolean {
-    return row.splitCount >= (row.original.channels - 1);
-  }
+  // private hasEnoughSplits(row: ExtendedTrackRow): boolean {
+  //   return row.splitCount >= (row.original.channels - 1);
+  // }
 
   recalculateFilePositions() {
     let currentPosition = 1;
@@ -536,7 +450,6 @@ export class TrackTableComponent implements OnInit {
       },
       leftSideGreyedOut: false,
       rightSideGreyedOut: false,
-      splitCount: 0,
       isParentRow: true
     };
     this.trackRows.push(newTrack);
