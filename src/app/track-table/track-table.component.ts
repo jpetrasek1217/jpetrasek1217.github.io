@@ -44,13 +44,12 @@ export class TrackTableComponent {
   onLeftTableCheck(track: Track, checked: boolean) {
     if (checked) {
       this.selectedTrackIds.add(track.id);
-      // If not already in right table, add for modification
+      // If not already in right table, add for modification (preserve id)
       if (!this.rightTableTracks.find(t => t.id === track.id)) {
-        this.rightTableTracks = [...this.rightTableTracks, { ...track }];
+        this.rightTableTracks = [...this.rightTableTracks, { ...track, id: track.id }];
       }
     } else {
       this.selectedTrackIds.delete(track.id);
-      // Remove from right table if present
       this.rightTableTracks = this.rightTableTracks.filter(t => t.id !== track.id);
     }
   }
@@ -61,7 +60,7 @@ export class TrackTableComponent {
     this.rightTableTracks = [
       ...this.rightTableTracks,
       {
-        id: newId,
+        id: newId, // unique negative id for new tracks
         trackType: '',
         position: this.rightTableTracks.length + 1, // Position based on current length 
         channels: 1
