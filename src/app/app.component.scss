@@ -8,3 +8,13 @@
     color: rgba(0, 0, 0, 0.87);
   }
 }
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.submit-btn {
+  height: 20px;
+}
