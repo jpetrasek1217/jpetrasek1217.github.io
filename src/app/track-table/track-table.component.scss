@@ -1,137 +1,124 @@
-.mat-mdc-table {
-  width: 100%;
-  margin-top: 16px;
-}
-
-.greyed-out {
-  color: rgba(0, 0, 0, 0.38);
-}
-
-.left-greyed-out {
-  color: rgba(0, 0, 0, 0.38);
-  background-color: rgba(0, 0, 0, 0.04);
-}
-
-.right-greyed-out {
-  color: rgba(0, 0, 0, 0.38);
-  background-color: rgba(0, 0, 0, 0.04);
-  
-  .mat-mdc-form-field {
-    ::ng-deep .mat-mdc-input-element:disabled {
-      color: rgba(0, 0, 0, 0.38);
-    }
-  }
-}
-
-td.mat-mdc-cell {
-  padding: 8px;
-}
-
-th.mat-mdc-header-cell:nth-child(5) {
-  border-right: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.table-container {
-  margin-top: 1rem;
-  overflow: auto;
-  border-radius: 4px;
-}
-
-table {
-  width: 100%;
-}
-
-.mat-mdc-header-cell {
-  font-weight: bold;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.mat-mdc-cell {
-  padding: 8px;
-}
-
-// Add visual separation between left and right sides
-td:nth-child(5), th:nth-child(5) {
-  border-right: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-// Make form fields more compact in table cells
-.compact-form-field {
-  width: 100%;
-  max-width: 120px;
-  
-  ::ng-deep .mat-mdc-form-field-wrapper {
-    padding-bottom: 0;
-    
-    .mat-mdc-form-field-flex {
-      padding-top: 0;
-    }
-  }
-}
-
-// Style number inputs
-input[type="number"] {
-  text-align: right;
-}
-
-// Add hover effect to rows
-.mat-mdc-row:hover {
-  background: rgba(0, 0, 0, 0.04);
-}
-
-// Video track row styling
-.mat-mdc-row:first-child {
-  background-color: rgba(0, 0, 0, 0.02);
-}
-
-// Channel indicator styling
-.channel-indicator {
-  font-weight: 500;
-  color: rgba(0, 0, 0, 0.87);
-  background-color: rgba(0, 0, 0, 0.04);
-  border-radius: 4px;
-  text-align: center;
-}
-
-// Merged row styling
-.merged-row {
-  background-color: rgba(0, 0, 0, 0.02);
-  
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.04);
-  }
-}
-
-// Actions container styling
-.actions-container {
-  margin: 1rem 0;
+.tables-container {
   display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
+  gap: 32px;
 }
 
-.button-cell {
-  width: 40px;
-  min-width: 40px;
-  padding: 0 4px !important;
-  text-align: center;
+.left-table, .right-table {
+  flex: 1 1 0;
+}
+
+.left-table h3, .right-table h3 {
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.mat-table {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.right-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.right-table .add-btn {
+  align-self: flex-end;
+  margin-bottom: 16px;
+}
+
+.right-table .mat-form-field {
+  width: 100%;
+  /* Ensure form fields fill the cell */
+}
+
+.right-table .mat-form-field-infix {
+  padding: 10px !important;
+  /* Add padding around the interior of the form field */
+}
+
+.right-table .mat-cell, .right-table .mat-header-cell,
+.left-table .mat-cell, .left-table .mat-header-cell {
+  height: 48px;
+  /* Standard Material table row height */
   vertical-align: middle;
 }
 
-// Ensure mat-select dropdown is not transparent
-::ng-deep .mat-mdc-select-panel {
-  background: #fff !important;
-  opacity: 1 !important;
+.right-table .mat-cell.actions-cell, .right-table .mat-header-cell.actions-cell {
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
+  text-align: right;
+  /* Reserve space for action buttons so layout doesn't shift */
 }
 
-.add-track-row {
+.right-table .mat-icon-button {
+  opacity: 0;
+  transition: opacity 0.2s;
+  margin-right: 8px;
+}
+
+.right-table tr:hover .mat-icon-button {
+  opacity: 1;
+}
+
+.right-table .mat-stroked-button {
+  margin-left: 8px;
+}
+
+.right-table .action-buttons {
   display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
 }
 
-.add-track-row-button {
-  padding: 30px 8px 30px 0px;
+.split-button {
+    margin-right: 56px;
 }
 
-.add-track-row {
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
+.remove-btn {
+    position: absolute;
+}
+
+.mat-form-field .mat-mdc-form-field-flex {
+    width: 100%;
+    padding: 16px;
+}
+
+.input-container {
+    padding: 0px 12px;
+}
+
+.tables-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.submit-btn {
+  padding: 0 32px;
+  height: 40px;
+  min-width: 120px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.15);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+  text-transform: uppercase;
+  margin-left: 16px;
+}
+
+.submit-btn:hover, .submit-btn:focus {
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.25);
+}
+
+@media (max-width: 900px) {
+  .tables-container {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .left-table, .right-table {
+    max-width: 100%;
+  }
 }

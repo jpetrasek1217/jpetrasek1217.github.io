@@ -1,28 +1,9 @@
-export type TrackType = 'Video' | 'Audio';
-
-export type AudioType = 
-  | 'mono-eng' | 'stereo-eng' | 'surround-eng'
-  | 'mono-fra' | 'stereo-fra' | 'surround-fra'
-  | 'mono-ger' | 'stereo-ger' | 'surround-ger'
-  | 'mono-spa' | 'stereo-spa' | 'surround-spa'
-  | 'mono-ita' | 'stereo-ita' | 'surround-ita' | 'video';
-
+// Track interface for use in the tables
 export interface Track {
-    type: TrackType;
-    component: string;
-    filePosition: number;
-    channels: number;
-    audioType?: AudioType;
+  id: number; // unique identifier
+  trackType: string;
+  position: number; // position is an index in the array, not a string
+  channels: number;
 }
 
-export interface TrackRow {
-    original: Track;
-    transformation: Track;
-    leftSideGreyedOut: boolean;
-    rightSideGreyedOut: boolean;
-}
-
-export interface ExtendedTrackRow extends TrackRow {
-    isParentRow?: boolean;  // Indicates if this is a parent row that can be split
-    parentRowIndex?: number;  // Reference to the parent row if this is a split row
-}
+// Optionally, you can define types for split/merge operations if needed later.

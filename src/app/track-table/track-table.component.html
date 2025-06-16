@@ -1,83 +1,113 @@
-<div class="table-container mat-elevation-z8">
-  <table mat-table [dataSource]="trackRows" cdkDropList (cdkDropListDropped)="drop($event)">
-    <!-- Drag Handle Column -->
-    <ng-container matColumnDef="drag">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let row; let i = index">
-        <span *ngIf="!isVideoTrack(row)" cdkDragHandle style="cursor: grab;">
-          &#x2261;
-        </span>
-      </td>
-    </ng-container>
+<!-- Material-styled tables with flexbox layout -->
+<div class="tables-container">
+  <!-- Left Table: All Tracks -->
+  <div class="left-table">
+    <h3>All Tracks</h3>
+    <table mat-table [dataSource]="allTracks" class="mat-elevation-z2">
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let track">
+          <mat-checkbox
+            [checked]="selectedTrackIds.has(track.id)"
+            (change)="onLeftTableCheck(track, $event.checked)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let track">{{ track.trackType }}</td>
+      </ng-container>
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef>Position</th>
+        <td mat-cell *matCellDef="let track">{{ track.position }}</td>
+      </ng-container>
+      <ng-container matColumnDef="channels">
+        <th mat-header-cell *matHeaderCellDef>Channels</th>
+        <td mat-cell *matCellDef="let track">{{ track.channels }}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="['select', 'type', 'position', 'channels']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['select', 'type', 'position', 'channels'];"></tr>
+    </table>
+  </div>
 
-    <!-- Type Column -->
-    <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef>Type</th>
-      <td mat-cell *matCellDef="let row">{{row.original.type}}</td>
-    </ng-container>
-
-    <!-- Component Column -->
-    <ng-container matColumnDef="component">
-      <th mat-header-cell *matHeaderCellDef>Component</th>
-      <td mat-cell *matCellDef="let row">{{row.original.component}}</td>
-    </ng-container>
-
-    <!-- File Position Column -->
-    <ng-container matColumnDef="filePosition">
-      <th mat-header-cell *matHeaderCellDef>File Position</th>
-      <td mat-cell *matCellDef="let row">{{row.original.filePosition}}</td>
-    </ng-container>
-
-    <!-- Channels Column -->
-    <ng-container matColumnDef="channels">
-      <th mat-header-cell *matHeaderCellDef>Channels</th>
-      <td mat-cell *matCellDef="let row">{{row.original.channels}}</td>
-    </ng-container>
-
-    <!-- AudioType Column as Dropdown -->
-    <ng-container matColumnDef="audioType">
-      <th mat-header-cell *matHeaderCellDef>AudioType</th>
-      <td mat-cell *matCellDef="let row; let i = index">
-        <mat-form-field appearance="outline" class="compact-form-field">
-          <mat-select [(ngModel)]="row.transformation.audioType" (selectionChange)="onAudioTypeChange(row)" [disabled]="isVideoTrack(row)">
-            <mat-option *ngFor="let type of audioTypes" [value]="type">{{type}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </td>
-    </ng-container>
-
-    <!-- Remove Button Column -->
-    <ng-container matColumnDef="remove">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let row; let i = index" class="button-cell">
-        <ng-container *ngIf="!isVideoTrack(row)">
-          <button mat-icon-button color="warn" (click)="removeRow(i)" matTooltip="Remove track">
-            -
-          </button>
-        </ng-container>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" cdkDrag [cdkDragDisabled]="isVideoTrack(row)"></tr>
-  </table>
-</div>
-
-<!-- Add Track Button Row -->
-<div class="add-track-row">
-  <div class="add-track-cell" style="padding:0; border:none;">
-    <button class="add-track-row-button" mat-icon-button color="accent" (click)="addTrack()" style="width:100%; height:100%;">
+  <!-- Right Table: Modifications/Additions -->
+  <div class="right-table">
+    <div class="tables-header-row">
+      <h3>Track Changes</h3>
+      <button mat-raised-button color="primary" class="submit-btn" (click)="onSubmit()">Submit</button>
+    </div>
+    <table mat-table [dataSource]="rightTableTracks" class="mat-elevation-z2">
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let track">
+          <mat-form-field appearance="outline">
+            <div class="input-container">
+              <textarea matInput
+                        cdkTextareaAutosize
+                        #autosizeType="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"
+                        [(ngModel)]="track.trackType"
+                        (ngModelChange)="updateRightTrack(track.id, { trackType: $event })">
+              </textarea>
+            </div>
+          </mat-form-field>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef>Position</th>
+        <td mat-cell *matCellDef="let track">
+          <mat-form-field appearance="outline">
+            <div class="input-container">
+              <textarea matInput
+                        type="number"
+                        cdkTextareaAutosize
+                        #autosizePosition="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="1"
+                        [(ngModel)]="track.position"
+                        (ngModelChange)="updateRightTrack(track.id, { position: $event })">
+              </textarea>
+            </div>
+            
+          </mat-form-field>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="channels">
+        <th mat-header-cell *matHeaderCellDef>Channels</th>
+        <td mat-cell *matCellDef="let track">
+          <mat-form-field appearance="outline">
+            <div class="input-container">
+              <textarea matInput
+                        type="number"
+                        cdkTextareaAutosize
+                        #autosizeChannels="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="1"
+                        [(ngModel)]="track.channels"
+                        (ngModelChange)="updateRightTrack(track.id, { channels: $event })">
+              </textarea>
+            </div>
+          </mat-form-field>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let track">
+          <div class="action-buttons">
+            <button mat-icon-button color="warn" *ngIf="hoveredRightTrackId === track.id" class="remove-btn" (click)="removeRightTrack(track.id)" (mouseenter)="$event.stopPropagation()">
+              <mat-icon>-</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="['type', 'position', 'channels', 'actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['type', 'position', 'channels', 'actions'];"
+          (mouseenter)="hoveredRightTrackId = row.id" (mouseleave)="hoveredRightTrackId = null"></tr>
+    </table>
+    <button mat-mini-fab color="primary" class="add-btn" (click)="addNewTrack()">
       <mat-icon>+</mat-icon>
     </button>
   </div>
-  <div class="add-track-cell" [attr.colspan]="displayedColumns.length - 1" style="padding:0; border:none;">
-    <button mat-raised-button color="accent" (click)="addTrack()" style="width:100%; height:100%; text-align:left; justify-content:flex-start;">
-      Add Track Type
-    </button>
-  </div>
-</div>
-
-<div class="actions-container">
-  <button mat-raised-button color="primary" (click)="update()">Update</button>
-  <button mat-button (click)="cancel()">Cancel</button>
 </div>
