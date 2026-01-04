@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import '../styles/globals.css';
 
 export const metadata: Metadata = {
-  title: 'Next.js + Express + TypeScript',
-  description: 'Boilerplate with app router',
+  title: 'YouTube CTR Evaluator',
+  description: 'AI-powered YouTube CTR prediction tool',
 };
 
 export default function RootLayout({
