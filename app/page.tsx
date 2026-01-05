@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 'use client';
 // YES I know this is HORRIBLE programming practice, but it is functional. I ran out of time to follow best practices, but I plan on refactoring in v2.
 import React, { useRef, useState } from 'react';
@@ -314,6 +315,17 @@ export default function Home() {
           {message.includes('Error') ? '❌' : '✅'} {message}
         </p>
       )}
+=======
+export default function Home() {
+  return (
+    <main>
+      {/* <main style={{ fontFamily: 'system-ui, sans-serif', padding: 24 }}> */}
+      <h1>Next.js + Express + TypeScript</h1>
+      <p>
+        This is a minimal boilerplate using the App Router. Visit{' '}
+        <a href='/api/hello'>/api/hello</a> for an Express API route.
+      </p>
+>>>>>>> 46cf11a54bcd3e04543fcf0b159a1609058637f7
     </main>
   );
 }
