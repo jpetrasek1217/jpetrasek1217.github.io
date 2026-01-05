@@ -1,5 +1,5 @@
 'use client';
-// app/page.tsx
+// YES I know this is HORRIBLE programming practice, but it is functional. I ran out of time to follow best practices, but I plan on refactoring in v2.
 import React, { useRef, useState } from 'react';
 import DropzoneComponent from './components/dropzone';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
@@ -49,7 +49,10 @@ export default function Home() {
           thumbnail: base64Thumbnail,
         };
 
-        const response = await fetch('http://localhost:8000/predict', {
+        const apiUrl =
+          process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+        const response = await fetch(`${apiUrl}/predict`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(jsonData),

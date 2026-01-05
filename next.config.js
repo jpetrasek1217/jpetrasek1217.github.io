@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  output: 'export',
+  basePath: '', // or '/repo-name' if not using custom domain
 };
-
 module.exports = nextConfig;
