@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 * {
   margin: 0;
   padding: 0;
@@ -312,19 +311,4 @@ input[type='submit']:disabled {
     font-size: 1rem;
     padding: 14px;
   }
-=======
-html,
-body {
-  padding: 0;
-  margin: 0;
-}
-* {
-  box-sizing: border-box;
-}
-
-main {
-  font-family: 'Roboto', sans-serif;
-  padding: 24;
-  justify-content: center;
->>>>>>> 46cf11a54bcd3e04543fcf0b159a1609058637f7
 }

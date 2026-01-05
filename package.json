@@ -14,13 +14,9 @@
     "express": "^4.18.2",
     "next": "^16.1.1",
     "react": "^18.2.0",
-<<<<<<< HEAD
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.70.0"
-=======
-    "react-dom": "^18.2.0"
->>>>>>> 46cf11a54bcd3e04543fcf0b159a1609058637f7
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
